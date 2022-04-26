@@ -1,6 +1,6 @@
 import Adafruit_DHT
 
-humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 21)
+humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
 
 humidity = round(humidity, 2)
 temperature = round(temperature, 2)
