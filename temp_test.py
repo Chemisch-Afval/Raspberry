@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
 
-import Adafruit_DHT
+import board
+import adafruit_dht
 
-humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
+dhtdevice = adafruit_dht.DHT22(board.D4)
+
+humidity, temperature = dhtdevice.humidity, dhtdevice.temperature
 
 humidity = round(humidity, 2)
 temperature = round(temperature, 2)
