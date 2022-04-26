@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 import Adafruit_DHT
 
 humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT11, 4)
