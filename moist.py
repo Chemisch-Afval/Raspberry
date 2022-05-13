@@ -71,6 +71,8 @@ def read_temp():
 def read_hum():
     t.sleep(wait)
     hum, temp  = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 17) #was 4
+    #Divide by 100 to get as decimal
+    hum = hum/100
     return(hum,temp)
     
 
@@ -108,7 +110,7 @@ while running:
                 #If true turn heater off
                 H = False
     
-    elif (T_s1 <= 1) or (T_s2 <=1):
+    elif (T_s1 <= 1) or (T_s2 <= 1):
         #If temperature falls below 1C turn on heater and turn off dehumidifier
         H = True
         DH = False
@@ -116,9 +118,9 @@ while running:
     #Part where we push the switch signals to the raspberry
     
     #Print for testing
-    print ('Temperatuur sensor 1: {0:0.1f}*C'.format(T_s1))
+    print ('Temperatuur sensor 1:', T_s1)
     print ('Temperatuur sensor 2:',T_s2)
-    print ('Luchtvochtigheid: {0:0.1f}%'.format(Hum))
+    print ('Luchtvochtigheid:', Hum)
     print ('Heater:', H)
     print ('Ontvochtiger:', DH)
     
