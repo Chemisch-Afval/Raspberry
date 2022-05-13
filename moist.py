@@ -5,7 +5,7 @@ import math
 import os
 import glob
 import time as t
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import Adafruit_DHT
 
 #Variables
@@ -144,7 +144,7 @@ while running:
         running = False
         
 
-        
+"""        
 #Visualization
 if vis:
     plt.title("Temperature sensor 1 and 2")
@@ -161,3 +161,4 @@ if vis:
     
     plt.scatter(ts,switches[:,0],s =0.001)
     plt.show()
+ """       
