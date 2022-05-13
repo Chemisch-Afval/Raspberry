@@ -70,7 +70,7 @@ def read_temp():
 
 def read_hum():
     t.sleep(wait)
-    hum, temp  = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
+    hum, temp  = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 17) #was 4
     return(hum,temp)
     
 
