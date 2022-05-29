@@ -1,4 +1,5 @@
 
+
 import numpy as np
 import math
 import os
@@ -6,7 +7,6 @@ import glob
 import time as t
 #import matplotlib.pyplot as plt
 import Adafruit_DHT
-from gpiozero import OutputDevice
 
 #Variables
 wait = 1
@@ -15,10 +15,6 @@ Hum = 0
 #Temperature for sensors 1 and 2
 T_s1 = 0
 T_s2 = 0
-
-#Relays
-heater = OutputDevice(1)
-dehumidifier = OutputDevice(2)
 
 #Switches
 #Dehumidifier switch
@@ -29,7 +25,9 @@ H = False
 stop = False
 #Running switch
 running = True
+#Visualization
 vis = False
+sim = False
 
 
 #Testing
@@ -87,8 +85,12 @@ while running:
     #Get the humidity, and temperature data from the sensors
     Hum, T_s1 = read_hum()
     T_s2 = read_temp()
+    #TBD
     
-   
+    if vis:
+        if t_step == steps:
+            stop = True
+    
     #Set humidity threshold
     Hum_thresh = 0.5
     #If day power, between 7 and 23 use 60% for humidity threshold
@@ -114,15 +116,6 @@ while running:
         DH = False
         
     #Part where we push the switch signals to the raspberry
-    if H:
-        heater.on()
-    else:
-        heater.off()
-        
-    if DH:
-        dehumidifier.on()    
-    else:
-        dehumidifier.off()
     
     #Print for testing
     print ('Temperatuur sensor 1:', T_s1)
@@ -133,7 +126,14 @@ while running:
     
     #Testing part
     if vis:
-         
+        if sim:
+            #Temp models
+            T_s1 = T_s1 -DH*0.07 + H*0.03
+            T_s2 = T_s2 -DH*0.07 + H*0.03
+            
+            #Hum models
+            Hum = Hum - DH*0.01 + 0.001
+        
         T_1.append(T_s1)
         T_2.append(T_s2)
         Hums.append(Hum)
