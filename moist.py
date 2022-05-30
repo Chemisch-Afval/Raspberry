@@ -125,7 +125,7 @@ while running:
                 #If true turn heater off
                 H = False
     
-    elif (T_s1 <= 1) or (T_s2 <= 1):
+    if (T_s1 <= 1) or (T_s2 <= 1):
         #If temperature falls below 1C turn on heater and turn off dehumidifier
         print("Below 1")
         H = True
