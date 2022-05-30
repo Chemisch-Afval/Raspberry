@@ -26,7 +26,10 @@ for i in OutputPins:
 
 
 #Variables
+#Set freeze threshold
 freeze_thresh = 2
+#Set humidity threshold
+Hum_thresh = 0.5
 wait = 1
 #Humidity
 Hum = 0
@@ -107,8 +110,7 @@ while running:
     T_s2 = read_temp()
     
    
-    #Set humidity threshold
-    Hum_thresh = 0.5
+
     #If day power, between 7 and 23 use 60% for humidity threshold
     #if time < 23 & time > 7:
      #   Hum_thresh = 0.6
@@ -119,16 +121,18 @@ while running:
         
         #Turn on dehumidifier
         DH = True
+        Hum_thresh = 0.5
         
         #Check if heater is on and if dehumidifier is not frozen
         if H:
             if (T_s1 >= 5) & (T_s2 >= 5):
                 #If true turn heater off
                 H = False
+               
     
     if (T_s1 <= freeze_thresh) or (T_s2 <= freeze_thresh):
         #If temperature falls below 1C turn on heater and turn off dehumidifier
-        print("Below 1")
+        Hum_thresh = 0.55
         H = True
         DH = False
         
