@@ -26,6 +26,7 @@ for i in OutputPins:
 
 
 #Variables
+freeze_thresh = 2
 wait = 1
 #Humidity
 Hum = 0
@@ -125,7 +126,7 @@ while running:
                 #If true turn heater off
                 H = False
     
-    if (T_s1 <= 1) or (T_s2 <= 1):
+    if (T_s1 <= freeze_thresh) or (T_s2 <= freeze_thresh):
         #If temperature falls below 1C turn on heater and turn off dehumidifier
         print("Below 1")
         H = True
