@@ -17,7 +17,7 @@ GPIO.setwarnings(False)
 
 #Set list of output GPIO pins
 #Pin 22 corresponds to heater and Pin 23 corresponds to dehumidifier
-OutputPins = [22, 23]
+OutputPins = [23, 24]
 
 #Loop through devices and turn to off
 for i in OutputPins:
