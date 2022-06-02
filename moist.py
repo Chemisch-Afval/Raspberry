@@ -46,6 +46,8 @@ T_s2 = 0
 #dehumidifier = OutputDevice(2)
 
 #Switches
+#save data
+save = True
 #Dehumidifier switch
 DH = False
 #Heater switch
@@ -68,6 +70,11 @@ T_2 = []
 Hums = []
 ts = []
 switches = np.array([])
+
+#File name for writing sensor data
+data_file = "data.txt"
+#File_limit
+file_limit = 100
 
 #Stuff for reading temp_sensor
 os.system('modprobe w1-gpio')
@@ -175,6 +182,25 @@ while running:
     else:
         GPIO.output(OutputPins[1],False)
         #dehumidifier.off()
+        
+    if save:
+        #Data is ordered: 
+        #timestamp, humidity, temperature of humidity sensor, temperature sensor, dehumidifier state, and heater state
+        timestamp = t.strftime("%I")+':' +t.strftime("%M")+':'+t.strftime("%S")
+        data = [Hum, T_s1, T_s2, DH, H]
+        
+        try:
+            data_from_file = np.loadtxt(data_file)
+            data_from_file = np.append(data_from_file,data)
+            #Keep only up to 100 measurements, thus cut off the first measurement when length exceeds limit
+            if data_from_file.shape[0] > file_limit:
+                data_from_file = data_from_file[1:,:]
+        except:
+            print("No data written to file yet will write new data")
+            data_from_file = data
+        
+        np.savetxt(data_file, data_from_file)
+
     
 
     #Print for testing
