@@ -25,12 +25,15 @@ for i in OutputPins:
 
 
 #Variables
+#Error counter
+err_count = [0,0]
 #Set freeze threshold
 freeze_thresh = 2
 #Set unfreeze threshold
 unfreeze_thresh = 4
 #Set humidity threshold
 Hum_thresh = 0.55
+#Delay after taking measurments
 wait = 1
 #Humidity
 Hum = 0
@@ -107,9 +110,28 @@ while running:
     #print(time)
     
     #Get the humidity, and temperature data from the sensors
-    Hum, T_s1 = read_hum()
-    T_s2 = read_temp()
-    
+    try:
+        Hum, T_s1 = read_hum()
+        #Store values for handling sensor errors
+        Hum_stored, T_s1_stored = Hum, T_s1
+        err_count[0] = 0
+    except:
+        print("Could not read humidity sensor, using previous measurments")
+        err_count[0] += 1
+        Hum, T_s1 = Hum_stored, T_s1_stored
+        if err_count[0] >= 5:
+            print("Could not read humidity sensor 5 consecutive times. Check wiring")
+        
+    try:
+        T_s2 = read_temp()
+        T_s2_stored = T_s2
+        err_count[1] = 0
+    except:
+        print("Could not read temperature sensor, using previous measurement")
+        err_count[1] += 1
+        T_s2 = T_s2_stored
+        if err_count[1] >= 5:
+            print("Could not read temperature sensor 5 consecutive times. Check wiring")
    
 
     #If day power, between 7 and 23 use 60% for humidity threshold
@@ -154,6 +176,7 @@ while running:
         GPIO.output(OutputPins[1],False)
         #dehumidifier.off()
     
+
     #Print for testing
     print ('Temperatuur sensor 1:', T_s1)
     print ('Temperatuur sensor 2:',T_s2)
