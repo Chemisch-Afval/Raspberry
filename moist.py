@@ -1,7 +1,6 @@
 
-
 import numpy as np
-import math
+#import math
 import os
 import glob
 import time as t
@@ -28,8 +27,10 @@ for i in OutputPins:
 #Variables
 #Set freeze threshold
 freeze_thresh = 2
+#Set unfreeze threshold
+unfreeze_thresh = 4
 #Set humidity threshold
-Hum_thresh = 0.5
+Hum_thresh = 0.55
 wait = 1
 #Humidity
 Hum = 0
@@ -116,23 +117,25 @@ while running:
      #   Hum_thresh = 0.6
     
     DH = False
-    H = False
+    #H = False
+    
+    #Turn on dehumidifier if threshold has been reached
     if Hum >= Hum_thresh:
-        
-        #Turn on dehumidifier
         DH = True
         Hum_thresh = 0.5
         
-        #Check if heater is on and if dehumidifier is not frozen
-        if H:
-            if (T_s1 >= 5) & (T_s2 >= 5):
-                #If true turn heater off
-                H = False
+    elif Hum <= 0.5:
+        Hum_thresh = 0.55
+        
+    #Check if heater is on and if dehumidifier is not frozen
+    if H:
+        if (T_s1 >= unfreeze_thresh) & (T_s2 >= unfreeze_thresh):
+            #If true turn heater off
+            H = False
                
-    
+    #Check if heater is frozen
     if (T_s1 <= freeze_thresh) or (T_s2 <= freeze_thresh):
         #If temperature falls below 1C turn on heater and turn off dehumidifier
-        Hum_thresh = 0.55
         H = True
         DH = False
         
