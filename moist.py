@@ -116,6 +116,9 @@ def read_hum():
 
 def animate(data):
     timeC = []
+    timeC = np.array([str(data[:,-3] + ":" + str(data[:,-2]) + ":" + str(data[:,-1]))])
+    
+    """
     for rows in data.shape[0]:
         time = rows[0]
             #print timeA
@@ -125,6 +128,7 @@ def animate(data):
             timeC.append(time_string)
         except:
             print("dont know")
+    """
         
     #Create axes for plotting, one for humidity, one for temperature, and two for both switches
     fig, ax = plt.subplots(2, 2, sharex= True)
@@ -224,8 +228,10 @@ while running:
     if save:
         #Data is ordered: 
         #timestamp, humidity, temperature of humidity sensor, temperature sensor, dehumidifier state, and heater state
-        timestamp = t.strftime("%I")+':' +t.strftime("%M")+':'+t.strftime("%S")
-        data = [timestamp, Hum, T_s1, T_s2, DH, H]
+        hour = t.gmtime()[3]
+        minute = t.gmtime()[4]
+        second = t.gmtime()[5]
+        data = [Hum, T_s1, T_s2, DH, H, hour, minute, second]
         
         try:
             data_from_file = np.loadtxt(data_file, delimiter = ",")
@@ -241,14 +247,14 @@ while running:
         np.savetxt(data_file, data_from_file, delimiter = ",")
         
         
-    #Display results in dynamic graph
-    if vis:
-        fig = plt.figure()
-        rect = fig.patch
-        rect.set_facecolor('#0079E7')
-
-        ani = animation.FuncAnimation(fig, animate(data_from_file), interval = 6000)   
-        plt.show()
+        #Display results in dynamic graph
+        if vis:
+            fig = plt.figure()
+            rect = fig.patch
+            rect.set_facecolor('#0079E7')
+    
+            ani = animation.FuncAnimation(fig, animate(data_from_file), interval = 6000)   
+            plt.show()
 
 
     
