@@ -11,6 +11,9 @@ import matplotlib.dates as mdates
 import matplotlib.animation as animation
 from datetime import datetime
 
+#package for running bash command for sending data
+import subprocess
+
 #packages for reading sensor data
 import Adafruit_DHT
 import RPi.GPIO as GPIO
@@ -50,7 +53,7 @@ T_s2 = 0
 
 #Switches
 #save data
-save = False
+save = True
 #Visualization
 vis = False
 #Dehumidifier switch
@@ -249,6 +252,11 @@ while running:
         #Save the data back to the data file
         data_from_file = np.reshape(data_from_file,(int(data_from_file.shape[0]/8),8))
         np.savetxt(data_file, data_from_file, delimiter = ",")
+        
+        #Send the data file via scp to desktop for plotting
+        bashCommand = "scp data.txt desktop-rjbi7s6\rafae@192.168.0.1:C:/Users/Desktop/raspberry"
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
         
         
         #Display results in dynamic graph
