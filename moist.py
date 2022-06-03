@@ -116,19 +116,22 @@ def read_hum():
 
 def animate(data):
     timeC = []
-    timeC = np.array([str(data[:,-3] + ":" + str(data[:,-2]) + ":" + str(data[:,-1]))])
+    #timeC = np.array([str(data[:,-3]) + ":" + str(data[:,-2]) + ":" + str(data[:,-1])])
     
-    """
+
     for rows in data.shape[0]:
-        time = rows[0]
+        h = rows[-3]
+        m = rows[-2]
+        s = rows[-1]
             #print timeA
-        time_string = datetime.strptime(time,'%H:%M:%S')
+        time_string = str(h) + ":" + str(m) + ":" + str(s)
+        #time_string = datetime.strptime(time,'%H:%M:%S')
         #print(time_string)
         try:
             timeC.append(time_string)
         except:
             print("dont know")
-    """
+
         
     #Create axes for plotting, one for humidity, one for temperature, and two for both switches
     fig, ax = plt.subplots(2, 2, sharex= True)
