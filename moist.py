@@ -119,7 +119,7 @@ def animate(data):
     #timeC = np.array([str(data[:,-3]) + ":" + str(data[:,-2]) + ":" + str(data[:,-1])])
     
     for rows in data:
-        print(rows)
+        #print(rows)
         h = rows[-3]
         m = rows[-2]
         s = rows[-1]
@@ -135,10 +135,10 @@ def animate(data):
         
     #Create axes for plotting, one for humidity, one for temperature, and two for both switches
     fig, ax = plt.subplots(2, 2, sharex= True)
-    ax[0,0].title("Humidity")
-    ax[0,1].title("Temperature")
-    ax[1,0].title("Dehumidifier state")
-    ax[1,1].title("Heater state")
+    ax[0,0].title.set_text("Humidity")
+    ax[0,1].title.set_text("Temperature")
+    ax[1,0].title.set_text("Dehumidifier state")
+    ax[1,1].title.set_text("Heater state")
 
     ax[0,0].xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
     #Plot humidity
@@ -247,7 +247,7 @@ while running:
             data_from_file = data
         
         #Save the data back to the data file
-        data_from_file = np.reshape(data_from_file,(data_from_file.shape[0]/8,8))
+        data_from_file = np.reshape(data_from_file,(int(data_from_file.shape[0]/8),8))
         np.savetxt(data_file, data_from_file, delimiter = ",")
         
         
