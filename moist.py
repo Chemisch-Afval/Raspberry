@@ -118,7 +118,6 @@ def animate(data):
     timeC = []
     #timeC = np.array([str(data[:,-3]) + ":" + str(data[:,-2]) + ":" + str(data[:,-1])])
     
-
     for rows in data:
         print(rows)
         h = rows[-3]
@@ -248,6 +247,7 @@ while running:
             data_from_file = data
         
         #Save the data back to the data file
+        data_from_file = np.reshape(data_from_file,(data_from_file.shape[0]/8,8))
         np.savetxt(data_file, data_from_file, delimiter = ",")
         
         
