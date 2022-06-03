@@ -119,7 +119,8 @@ def animate(data):
     #timeC = np.array([str(data[:,-3]) + ":" + str(data[:,-2]) + ":" + str(data[:,-1])])
     
 
-    for rows in data.shape[0]:
+    for rows in data:
+        print(rows)
         h = rows[-3]
         m = rows[-2]
         s = rows[-1]
