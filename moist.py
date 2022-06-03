@@ -50,9 +50,9 @@ T_s2 = 0
 
 #Switches
 #save data
-save = True
+save = False
 #Visualization
-vis = True
+vis = False
 #Dehumidifier switch
 DH = False
 #Heater switch
@@ -244,7 +244,7 @@ while running:
                 data_from_file = data_from_file[1:,:]
         except:
             print("No data written to file yet will write new data")
-            data_from_file = data
+            data_from_file = np.array([data])
         
         #Save the data back to the data file
         data_from_file = np.reshape(data_from_file,(int(data_from_file.shape[0]/8),8))
