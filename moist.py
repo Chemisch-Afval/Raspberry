@@ -1,12 +1,18 @@
 
 import numpy as np
-#import math
+
 import os
 import glob
 import time as t
-#import matplotlib.pyplot as plt
+
+#Packages for visualization
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import matplotlib.animation as animation
+from datetime import datetime
+
+#packages for reading sensor data
 import Adafruit_DHT
-#from gpiozero import OutputDevice
 import RPi.GPIO as GPIO
 
 
@@ -41,13 +47,12 @@ Hum = 0
 T_s1 = 0
 T_s2 = 0
 
-#Relays
-#heater = OutputDevice(1)
-#dehumidifier = OutputDevice(2)
 
 #Switches
 #save data
 save = True
+#Visualization
+vis = True
 #Dehumidifier switch
 DH = False
 #Heater switch
@@ -56,7 +61,6 @@ H = False
 stop = False
 #Running switch
 running = True
-vis = False
 
 
 #Testing
@@ -108,6 +112,40 @@ def read_hum():
     #Divide by 100 to get as decimal
     hum = hum/100
     return(hum,temp)
+
+
+def animate(data):
+    timeC = []
+    for rows in data.shape[0]:
+        time = rows[0]
+            #print timeA
+        time_string = datetime.strptime(time,'%H:%M:%S')
+        #print(time_string)
+        try:
+            timeC.append(time_string)
+        except:
+            print("dont know")
+        
+    #Create axes for plotting, one for humidity, one for temperature, and two for both switches
+    fig, ax = plt.subplots(2, 2, sharex= True)
+    ax[0,0].title("Humidity")
+    ax[0,1].title("Temperature")
+    ax[1,0].title("Dehumidifier state")
+    ax[1,1].title("Heater state")
+
+    ax[0,0].xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    #Plot humidity
+    ax[0,0].plot(timeC,data[:,1], 'c', linewidth = 3.3)
+    #Plot temperatures
+    ax[0,1].plot(timeC,data[:,2], 'c', linewidth = 3.3)
+    ax[0,1].plot(timeC,data[:,3], 'c', linewidth = 3.3)
+    #Plot dehumidifier state
+    ax[1,0].plot(timeC,data[:,4], 'c', linewidth = 3.3)
+    #Plot heater state
+    ax[1,1].plot(timeC,data[:,5], 'c', linewidth = 3.3)
+    plt.title('Data')
+    plt.xlabel('Time')
+    
     
 
 #Main loop
@@ -187,10 +225,10 @@ while running:
         #Data is ordered: 
         #timestamp, humidity, temperature of humidity sensor, temperature sensor, dehumidifier state, and heater state
         timestamp = t.strftime("%I")+':' +t.strftime("%M")+':'+t.strftime("%S")
-        data = [Hum, T_s1, T_s2, DH, H]
+        data = [timestamp, Hum, T_s1, T_s2, DH, H]
         
         try:
-            data_from_file = np.loadtxt(data_file)
+            data_from_file = np.loadtxt(data_file, delimiter = ",")
             data_from_file = np.append(data_from_file,data)
             #Keep only up to 100 measurements, thus cut off the first measurement when length exceeds limit
             if data_from_file.shape[0] > file_limit:
@@ -199,7 +237,19 @@ while running:
             print("No data written to file yet will write new data")
             data_from_file = data
         
-        np.savetxt(data_file, data_from_file)
+        #Save the data back to the data file
+        np.savetxt(data_file, data_from_file, delimiter = ",")
+        
+        
+    #Display results in dynamic graph
+    if vis:
+        fig = plt.figure()
+        rect = fig.patch
+        rect.set_facecolor('#0079E7')
+
+        ani = animation.FuncAnimation(fig, animate(data_from_file), interval = 6000)   
+        plt.show()
+
 
     
 
@@ -210,16 +260,6 @@ while running:
     print ('Heater:', H)
     print ('Ontvochtiger:', DH)
     
-    #Testing part
-    if vis:
-         
-        T_1.append(T_s1)
-        T_2.append(T_s2)
-        Hums.append(Hum)
-        ts.append(t_step)
-        switches = np.append(switches, [DH,H])
-        
-        t_step += 1
             
     if stop:
         running = False
